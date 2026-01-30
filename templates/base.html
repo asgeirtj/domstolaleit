@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="is">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Domstolaleit{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+    <header>
+        <h1><a href="/">Domstolaleit</a></h1>
+        <p class="subtitle">Leit i domum islenskra domstola</p>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>Leit i <a href="https://www.haestirettur.is" target="_blank">Haestarett</a>,
+           <a href="https://www.landsrettur.is" target="_blank">Landsrett</a> og
+           <a href="https://www.heradsdomstolar.is" target="_blank">Heradsdomstolum</a></p>
+    </footer>
+{% if hot_reload %}
+    <script>
+        const ws = new WebSocket(`ws://${location.host}/hot-reload`);
+        ws.onmessage = () => location.reload();
+        ws.onclose = () => setInterval(() => location.reload(), 1000);
+    </script>
+{% endif %}
+</body>
+</html>

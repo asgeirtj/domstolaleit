@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Domstolaleit - Leit i islenskum domum{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <form hx-post="/leit"
+          hx-target="#results"
+          hx-indicator="#loading"
+          hx-push-url="true"
+          class="search-form">
+        <div class="form-group">
+            <label for="query">Leitarord</label>
+            <input type="text"
+                   id="query"
+                   name="query"
+                   placeholder="t.d. skadabaetur, umgengisrettur, vinnuslys..."
+                   required
+                   autofocus>
+        </div>
+
+        <details class="advanced-search">
+            <summary>Itarlegri leit</summary>
+            <div class="date-range">
+                <div class="form-group">
+                    <label for="date_from">Dagsetning fra</label>
+                    <input type="date" id="date_from" name="date_from">
+                </div>
+                <div class="form-group">
+                    <label for="date_to">Dagsetning til</label>
+                    <input type="date" id="date_to" name="date_to">
+                </div>
+            </div>
+        </details>
+
+        <button type="submit" class="search-button">Leita</button>
+    </form>
+</div>
+
+<div id="loading" class="htmx-indicator">
+    <div class="spinner"></div>
+    <p>Leita i ollum domstolum...</p>
+</div>
+
+<div id="results"></div>
+{% endblock %}

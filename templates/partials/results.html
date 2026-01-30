@@ -1,0 +1,66 @@
+<div class="results-container">
+    <div class="results-summary">
+        <h2>Nidurstodur fyrir "{{ query }}"</h2>
+        <p class="result-count">{{ all_cases|length }} domar fundust</p>
+    </div>
+
+    <div class="court-status">
+        {% for result in results %}
+        <div class="court-badge {% if result.success %}success{% else %}error{% endif %}">
+            <span class="court-name">{{ result.court_display_name }}</span>
+            {% if result.success %}
+                <span class="count">{{ result.cases|length }}</span>
+            {% else %}
+                <span class="error-icon" title="{{ result.error }}">!</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    {% for result in results %}
+        {% if result.error %}
+        <div class="error-message">
+            <strong>{{ result.court_display_name }}:</strong> {{ result.error }}
+        </div>
+        {% endif %}
+    {% endfor %}
+
+    {% if all_cases %}
+    <div class="cases-list">
+        {% for case in all_cases %}
+        <article class="case-card">
+            <div class="case-header">
+                <span class="court-tag {{ case.court }}">{{ case.court_display_name }}</span>
+                {% if case.date %}
+                <time datetime="{{ case.date.isoformat() }}">{{ case.date.strftime('%d.%m.%Y') }}</time>
+                {% endif %}
+            </div>
+            <h3>
+                <a href="{{ case.url }}" target="_blank" rel="noopener">
+                    {{ case.case_number }}
+                </a>
+            </h3>
+            <div class="case-title">{{ case.title | replace('\n', '<br>') | safe }}</div>
+            {% if case.keywords %}
+            <div class="case-keywords">{{ case.keywords }}</div>
+            {% endif %}
+            {% if case.summary %}
+            <p class="case-summary">{{ case.summary }}</p>
+            {% endif %}
+            {% if case.snippets %}
+            <div class="case-snippets">
+                {% for snippet in case.snippets %}
+                <p class="snippet">{{ snippet | highlight_query(query) }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-results">
+        <p>Engir domar fundust med leitarordunum "{{ query }}".</p>
+        <p>Profa ad breyta leitarordum eda nota styttri leit.</p>
+    </div>
+    {% endif %}
+</div>
