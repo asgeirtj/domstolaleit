@@ -40,7 +40,7 @@ class SearchAggregator:
                     SearchResult(
                         court=self.scrapers[i].court_name,
                         cases=[],
-                        error=f"Ovaent villa: {result}",
+                        error=f"Óvænt villa: {result}",
                     )
                 )
             else:

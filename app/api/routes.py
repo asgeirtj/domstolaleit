@@ -8,6 +8,7 @@ from markupsafe import Markup
 
 from app.config import TEMPLATES_DIR
 from app.scrapers.aggregator import SearchAggregator
+from app import search as local_search
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
@@ -101,3 +102,67 @@ async def search(
         )
     finally:
         await aggregator.close()
+
+
+@router.post("/local", response_class=HTMLResponse)
+async def local_search_endpoint(
+    request: Request,
+    query: str = Form(...),
+):
+    """Search local index and return HTML partial with results."""
+    results = local_search.search(query.strip(), limit=100)
+
+    return templates.TemplateResponse(
+        "partials/local_results.html",
+        {
+            "request": request,
+            "results": results,
+            "query": query,
+            "count": len(results),
+        },
+    )
+
+
+@router.get("/stats")
+async def stats():
+    """Get index statistics."""
+    return local_search.get_stats()
+
+
+@router.get("/domur/{verdict_id}", response_class=HTMLResponse)
+async def view_verdict(request: Request, verdict_id: int, q: str | None = None):
+    """View a single verdict with optional search term highlighting."""
+    verdict = local_search.get_verdict(verdict_id)
+
+    if not verdict:
+        return templates.TemplateResponse(
+            "partials/not_found.html",
+            {"request": request},
+            status_code=404,
+        )
+
+    # Highlight search terms if query provided
+    content = verdict.content
+    if q:
+        from app.utils.icelandic import get_all_query_forms
+        word_forms = get_all_query_forms(q)
+        all_forms = []
+        for forms in word_forms.values():
+            all_forms.extend(forms)
+        if all_forms:
+            all_forms = sorted(set(all_forms), key=len, reverse=True)
+            pattern = re.compile(
+                r"\b(" + "|".join(re.escape(f) for f in all_forms) + r")\b",
+                re.IGNORECASE,
+            )
+            content = pattern.sub(r"<mark>\1</mark>", content)
+
+    return templates.TemplateResponse(
+        "verdict.html",
+        {
+            "request": request,
+            "verdict": verdict,
+            "content": Markup(content.replace("\n", "<br>")),
+            "query": q,
+        },
+    )

@@ -1,4 +1,6 @@
+import logging
 import os
+import time
 
 import arel
 from fastapi import FastAPI, Request
@@ -9,7 +11,34 @@ from fastapi.templating import Jinja2Templates
 from app.api.routes import router as search_router
 from app.config import STATIC_DIR, TEMPLATES_DIR
 
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
+    datefmt="%H:%M:%S",
+)
+
+# Enable httpx request logging (outgoing requests to courts)
+logging.getLogger("httpx").setLevel(logging.DEBUG)
+logging.getLogger("httpcore").setLevel(logging.DEBUG)
+
+logger = logging.getLogger("domstolaleit")
+
 app = FastAPI(title="Dómstólaleit", description="Unified court search for Iceland")
+
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    """Log all incoming requests with timing."""
+    start = time.perf_counter()
+    logger.info(f">>> {request.method} {request.url.path}?{request.query_params}")
+
+    response = await call_next(request)
+
+    duration = (time.perf_counter() - start) * 1000
+    logger.info(f"<<< {response.status_code} in {duration:.0f}ms")
+    return response
+
 
 # Hot reload for development
 if os.environ.get("AREL_HOT_RELOAD"):

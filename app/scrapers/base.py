@@ -1,4 +1,5 @@
 import io
+import os
 import re
 from abc import ABC, abstractmethod
 from dataclasses import replace
@@ -12,56 +13,13 @@ import pdfplumber
 from app.config import REQUEST_TIMEOUT, USER_AGENT
 from app.models.court_case import CourtCase, CourtName, SearchResult
 
+# Disable SSL verification for debugging with Proxyman/Charles/mitmproxy
+# Set PROXY_DEBUG=1 to enable
+PROXY_DEBUG = os.environ.get("PROXY_DEBUG", "").lower() in ("1", "true", "yes")
+
 # Number of characters to show around each search term match
 SNIPPET_CONTEXT = 80
 MAX_SNIPPETS_PER_CASE = 3
-
-# Valid short Icelandic words (1-2 chars) that should NOT be joined to following text
-VALID_SHORT_WORDS = frozenset({
-    # 1-char words
-    'á', 'í', 'ó', 'ú', 'a', 'i', 'o', 'u',
-    # 2-char words (common)
-    'að', 'af', 'án', 'ef', 'ég', 'ei', 'en', 'er', 'fy', 'hé', 'já', 'né', 'nú',
-    'og', 'sé', 'um', 'úr', 'þá', 'þó', 'þú', 'ör', 'nr', 'gr', 'sl', 'kr',
-})
-
-
-def fix_broken_words(text: str) -> str:
-    """Fix words broken by PDF text extraction.
-
-    Court websites store PDF-extracted text with justification spaces that
-    break words like 'við' into 'v ið'. This rejoins fragments when the
-    first part isn't a valid standalone Icelandic word.
-    """
-    # Pattern 1: Word boundary + 1-2 char fragment + space + 1-4 char fragment
-    # Handles: "v ið" -> "við"
-    pattern1 = re.compile(
-        r'\b([a-záðéíóúýþæö]{1,2})\s+([a-záðéíóúýþæö]{1,4})\b',
-        re.IGNORECASE
-    )
-
-    # Pattern 2: Mid-word break - letters + 1-2 char + space + 2-4 char + letters
-    # Handles: "fjársk ipti" -> "fjárskipti"
-    pattern2 = re.compile(
-        r'([a-záðéíóúýþæö]{2,})([a-záðéíóúýþæö]{1,2})\s+([a-záðéíóúýþæö]{2,4})([a-záðéíóúýþæö]*)',
-        re.IGNORECASE
-    )
-
-    def should_join_boundary(match: re.Match) -> str:
-        frag1, frag2 = match.group(1), match.group(2)
-        if frag1.lower() not in VALID_SHORT_WORDS:
-            return frag1 + frag2
-        return match.group(0)
-
-    def should_join_midword(match: re.Match) -> str:
-        prefix, frag1, frag2, suffix = match.groups()
-        # Always join mid-word breaks (they're never valid word boundaries)
-        return prefix + frag1 + frag2 + suffix
-
-    # Apply mid-word fix first, then boundary fix
-    text = pattern2.sub(should_join_midword, text)
-    text = pattern1.sub(should_join_boundary, text)
-    return text
 
 
 class BaseScraper(ABC):
@@ -80,6 +38,7 @@ class BaseScraper(ABC):
                 "Accept": "text/html, */*",
             },
             follow_redirects=True,
+            verify=not PROXY_DEBUG,  # Disable SSL verify for Proxyman debugging
         )
 
     async def close(self) -> None:
@@ -99,19 +58,19 @@ class BaseScraper(ABC):
             return SearchResult(
                 court=self.court_name,
                 cases=[],
-                error="Tenging vid vefinn rann ut a tima",
+                error="Tenging við vefinn rann út á tíma",
             )
         except httpx.HTTPError as e:
             return SearchResult(
                 court=self.court_name,
                 cases=[],
-                error=f"Villa vid ad na i gogn: {e}",
+                error=f"Villa við að ná í gögn: {e}",
             )
         except Exception as e:
             return SearchResult(
                 court=self.court_name,
                 cases=[],
-                error=f"Ovaent villa: {e}",
+                error=f"Óvænt villa: {e}",
             )
 
     async def _do_search(
@@ -278,18 +237,16 @@ class BaseScraper(ABC):
             if pdf_text:
                 return pdf_text
 
-            # Fall back to HTML extraction with word-fixing heuristics
+            # Fall back to HTML extraction
             verdict_elem = soup.select_one("#verdict-text") or soup.select_one(".verdict__body")
             if verdict_elem:
                 text = verdict_elem.get_text()
-                text = " ".join(text.split())
-                return fix_broken_words(text)
+                return " ".join(text.split())
 
             content_elem = soup.select_one(".session-content")
             if content_elem:
                 text = content_elem.get_text()
-                text = " ".join(text.split())
-                return fix_broken_words(text)
+                return " ".join(text.split())
 
             return ""
         except Exception:
