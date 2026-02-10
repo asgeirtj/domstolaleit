@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}{{ verdict.case_number }} - {{ verdict.court_display }}{% endblock %}
+
+{% block content %}
+<article class="verdict-view">
+    <div class="verdict-header">
+        <a href="/" class="back-link">Til baka</a>
+        <div class="verdict-meta">
+            <span class="court-tag {{ verdict.court }}">{{ verdict.court_display }}</span>
+            <h1>{{ verdict.case_number }}</h1>
+        </div>
+        {% if query %}
+        <p class="search-context">Leitarorð: <strong>{{ query }}</strong></p>
+        {% endif %}
+    </div>
+
+    <div class="verdict-content">
+        {{ content }}
+    </div>
+
+    <div class="verdict-footer">
+        <a href="{{ verdict.url }}" target="_blank" rel="noopener" class="original-link">
+            Skoða upprunalegan dóm á {{ verdict.court_display }}
+        </a>
+    </div>
+</article>
+{% endblock %}

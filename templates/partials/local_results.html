@@ -1,0 +1,47 @@
+<div class="results-container">
+    <div class="results-summary">
+        <h2>Niðurstöður fyrir "{{ query }}"</h2>
+        <p class="result-count">{{ count }} dómar fundust</p>
+    </div>
+
+    {% if results %}
+    <div class="cases-list">
+        {% for result in results %}
+        <article class="case-card {{ result.court }}">
+            <div class="case-header">
+                <span class="court-tag {{ result.court }}">{{ result.court_display }}</span>
+                {% if result.date %}
+                <time datetime="{{ result.date.isoformat() }}">{{ result.date.strftime('%d.%m.%Y') }}</time>
+                {% endif %}
+            </div>
+            <h3>
+                <a href="{{ result.url }}" target="_blank" rel="noopener">
+                    {{ result.case_number }}
+                </a>
+            </h3>
+            {% if result.parties %}
+            <div class="case-parties">{{ result.parties }}</div>
+            {% endif %}
+            {% if result.keywords %}
+            <div class="case-keywords">{{ result.keywords }}</div>
+            {% endif %}
+            {% if result.summary %}
+            <p class="case-summary">{{ result.summary }}</p>
+            {% endif %}
+            {% if result.snippets %}
+            <div class="case-snippets">
+                {% for snippet in result.snippets %}
+                <p class="snippet">{{ snippet | safe }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-results">
+        <p>Engir dómar fundust með leitarorðunum "{{ query }}".</p>
+        <p>Prófa að breyta leitarorðum eða nota styttri leit.</p>
+    </div>
+    {% endif %}
+</div>

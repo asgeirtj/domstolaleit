@@ -1,29 +1,40 @@
 {% extends "base.html" %}
 
-{% block title %}Domstolaleit - Leit i islenskum domum{% endblock %}
+{% block title %}Dómstólaleit - Leit í íslenskum dómum{% endblock %}
 
 {% block content %}
 <div class="search-container">
-    <form hx-post="/leit"
+    <div class="search-mode-toggle">
+        <label class="toggle">
+            <input type="checkbox" id="local-mode" checked>
+            <span class="toggle-label">
+                <span class="mode-local">Staðbundin leit (15.000+ dómar)</span>
+                <span class="mode-live">Lifandi leit</span>
+            </span>
+        </label>
+    </div>
+
+    <form id="search-form"
+          hx-post="/local"
           hx-target="#results"
           hx-indicator="#loading"
           hx-push-url="true"
           class="search-form">
         <div class="form-group">
-            <label for="query">Leitarord</label>
+            <label for="query">Leitarorð</label>
             <input type="text"
                    id="query"
                    name="query"
-                   placeholder="t.d. skadabaetur, umgengisrettur, vinnuslys..."
+                   placeholder="t.d. skaðabætur, umgengnisréttur, vinnuslys..."
                    required
                    autofocus>
         </div>
 
-        <details class="advanced-search">
-            <summary>Itarlegri leit</summary>
+        <details class="advanced-search" id="advanced-options">
+            <summary>Ítarlegri leit</summary>
             <div class="date-range">
                 <div class="form-group">
-                    <label for="date_from">Dagsetning fra</label>
+                    <label for="date_from">Dagsetning frá</label>
                     <input type="date" id="date_from" name="date_from">
                 </div>
                 <div class="form-group">
@@ -37,9 +48,26 @@
     </form>
 </div>
 
+<script>
+document.getElementById('local-mode').addEventListener('change', function() {
+    const form = document.getElementById('search-form');
+    const advanced = document.getElementById('advanced-options');
+    if (this.checked) {
+        form.setAttribute('hx-post', '/local');
+        advanced.style.display = 'none';
+    } else {
+        form.setAttribute('hx-post', '/leit');
+        advanced.style.display = 'block';
+    }
+    htmx.process(form);
+});
+// Hide advanced options by default for local search
+document.getElementById('advanced-options').style.display = 'none';
+</script>
+
 <div id="loading" class="htmx-indicator">
     <div class="spinner"></div>
-    <p>Leita i ollum domstolum...</p>
+    <p>Leita í öllum dómstólum...</p>
 </div>
 
 <div id="results"></div>
