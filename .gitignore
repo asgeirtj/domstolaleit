@@ -28,3 +28,6 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+
+# Data (large files - DB + PDFs)
+data/
