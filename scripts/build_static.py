@@ -292,10 +292,10 @@ def render_base(title: str, content: str, css_path: str = "css/style.css", favic
 </head>
 <body>
     <header>
-        <h1><a href="index.html">Logmannaleit</a></h1>
-        <p class="subtitle">Leit i domum islenskra domstola</p>
+        <h1><a href="index.html">Lögmannaleit</a></h1>
+        <p class="subtitle">Leit í dómum íslenskra dómstóla</p>
         <nav class="main-nav">
-            <a href="index.html">Logmenn</a>
+            <a href="index.html">Lögmenn</a>
         </nav>
     </header>
     <main>
@@ -315,8 +315,8 @@ def render_leaderboard(lawyers_json: str) -> str:
     return f"""<div class="search-container compact-filters">
     <div class="filters-top-row">
         <div class="filters-left">
-            <span class="page-description"><span id="lawyer-count">0</span> logmenn med <span id="min-cases-display">5</span>+ mal</span>
-            <input type="text" id="lawyer-search" placeholder="Leita ad logmanni..." autocomplete="off">
+            <span class="page-description"><span id="lawyer-count">0</span> lögmenn með <span id="min-cases-display">5</span>+ mál</span>
+            <input type="text" id="lawyer-search" placeholder="Leita að lögmanni..." autocomplete="off">
         </div>
         <div class="filter-buttons" id="min-cases-buttons">
             <button type="button" class="filter-btn" data-value="1">1+</button>
@@ -333,15 +333,15 @@ def render_leaderboard(lawyers_json: str) -> str:
         <span class="filter-label">Innihalda:</span>
         <label class="checkbox-filter">
             <input type="checkbox" id="include-prosecutors" checked>
-            <span>Saksoknara</span>
+            <span>Saksóknara</span>
         </label>
         <label class="checkbox-filter">
             <input type="checkbox" id="include-criminal" checked>
-            <span>Sakamal (S-)</span>
+            <span>Sakamál (S-)</span>
         </label>
         <label class="checkbox-filter">
             <input type="checkbox" id="include-retired" checked>
-            <span>Ovirka logmenn</span>
+            <span>Óvirka lögmenn</span>
         </label>
     </div>
 </div>
@@ -356,7 +356,7 @@ def render_leaderboard(lawyers_json: str) -> str:
                 <th class="col-wins sortable" data-sort="wins">S</th>
                 <th class="col-losses sortable" data-sort="losses">T</th>
                 <th class="col-winrate sortable" data-sort="win_rate" colspan="2">Sigur%</th>
-                <th class="col-info">Rettindi</th>
+                <th class="col-info">Réttindi</th>
                 <th class="col-exp sortable" data-sort="years_active">Reynsla</th>
                 <th class="col-age sortable" data-sort="age">Aldur</th>
             </tr>
@@ -583,9 +583,9 @@ def render_profile(profile: dict) -> str:
             lt_display = LICENSE_TYPE_DISPLAY.get(lawyer["license_type"], lawyer["license_type"])
             parts.append(f'            <span class="meta-item">{_h(lt_display)}</span>')
         if lawyer.get("years_active") is not None:
-            parts.append(f'            <span class="meta-item">{lawyer["years_active"]} ara reynsla</span>')
+            parts.append(f'            <span class="meta-item">{lawyer["years_active"]} ára reynsla</span>')
         if lawyer.get("age") is not None:
-            parts.append(f'            <span class="meta-item">{int(lawyer["age"])} ara</span>')
+            parts.append(f'            <span class="meta-item">{int(lawyer["age"])} ára</span>')
         if lawyer.get("practice_category"):
             pc = _h(lawyer["practice_category"])
             psc = lawyer.get("practice_subcategory")
@@ -628,14 +628,14 @@ def render_profile(profile: dict) -> str:
         elif lawyer.get("license_date"):
             parts.append('            <div class="event-item">')
             parts.append(f'                <span class="event-date">{_h(lawyer["license_date"][:10])}</span>')
-            parts.append('                <span class="event-type">Rettindi veitt</span>')
+            parts.append('                <span class="event-type">Réttindi veitt</span>')
             if lawyer.get("license_type"):
                 lt = LICENSE_TYPE_DISPLAY.get(lawyer["license_type"], lawyer["license_type"])
                 parts.append(f'                <span class="event-license">{_h(lt)}</span>')
             parts.append('            </div>')
         if lawyer.get("license_status") == "active":
             parts.append('            <div class="event-item event-current">')
-            parts.append('                <span class="event-date">Nu</span>')
+            parts.append('                <span class="event-date">Nú</span>')
             parts.append(f'                <span class="event-type">{_h(LICENSE_STATUS_DISPLAY.get("active", ""))}</span>')
             if lawyer.get("license_type"):
                 lt = LICENSE_TYPE_DISPLAY.get(lawyer["license_type"], lawyer["license_type"])
@@ -663,7 +663,7 @@ def render_profile(profile: dict) -> str:
     by_court = lawyer.get("by_court", {})
     if by_court:
         parts.append('    <div class="lawyer-section">')
-        parts.append('        <h3>Eftir domstoli</h3>')
+        parts.append('        <h3>Eftir dómstóli</h3>')
         parts.append('        <div class="court-breakdown">')
         for court, stats in by_court.items():
             cwr = stats["win_rate"]
@@ -686,14 +686,14 @@ def render_profile(profile: dict) -> str:
     parts.append(f'            <h3>Mal (<span id="visible-count">{len(cases)}</span>)</h3>')
     parts.append('            <label class="checkbox-filter">')
     parts.append('                <input type="checkbox" id="hide-criminal-cases">')
-    parts.append('                <span>Fela sakamal (S-)</span>')
+    parts.append('                <span>Fela sakamál (S-)</span>')
     parts.append('            </label>')
     parts.append('        </div>')
     parts.append('        <div class="cases-list" id="cases-list">')
     for case in cases:
         rd = ROLE_DISPLAY.get(case["role"], case["role"])
         outcome_class = f'outcome-{case["outcome"]}' if case.get("outcome") else "outcome-unknown"
-        outcome_text = {"win": "Sigur", "loss": "Tap"}.get(case.get("outcome", ""), "Ovist")
+        outcome_text = {"win": "Sigur", "loss": "Tap"}.get(case.get("outcome", ""), "Óvíst")
 
         parts.append(f'            <div class="case-card {_h(case["court"])}" data-court="{_h(case["court"])}" data-case-number="{_h(case["case_number"])}">')
         parts.append('                <div class="case-header">')
@@ -775,7 +775,7 @@ def build():
     # Render leaderboard page
     lawyers_json = json.dumps(lawyers, ensure_ascii=False, separators=(",", ":"))
     leaderboard_content = render_leaderboard(lawyers_json)
-    leaderboard_html = render_base("Logmannaleit", leaderboard_content)
+    leaderboard_html = render_base("Lögmannaleit", leaderboard_content)
     (OUTPUT_DIR / "index.html").write_text(leaderboard_html, encoding="utf-8")
     print("  Generated leaderboard index.html")
 
