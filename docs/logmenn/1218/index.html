@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Setfán Karl Kristjánsson - Logmannaleit</title>
+    <title>Lúðvík Kaaber - Logmannaleit</title>
     <link rel="icon" type="image/jpeg" href="../../favicon.jpeg">
     <link rel="stylesheet" href="../../css/style.css">
 </head>
@@ -20,25 +20,22 @@
     <a href="../../index.html" class="back-link">Til baka</a>
     <div class="lawyer-header">
         <h2>
-            Setfán Karl Kristjánsson
-            <span class="license-badge license-retired">
-                Hættur
-            </span>
+            Lúðvík Kaaber
         </h2>
         <div class="lawyer-stats-row">
-            <div class="stat-box"><span class="stat-value">1</span><span class="stat-label">Mal</span></div>
-            <div class="stat-box stat-win"><span class="stat-value">0</span><span class="stat-label">Sigrar</span></div>
+            <div class="stat-box"><span class="stat-value">2</span><span class="stat-label">Mal</span></div>
+            <div class="stat-box stat-win"><span class="stat-value">1</span><span class="stat-label">Sigrar</span></div>
             <div class="stat-box stat-loss"><span class="stat-value">1</span><span class="stat-label">Tap</span></div>
-            <div class="stat-box"><span class="stat-value">0%</span><span class="stat-label">Sigurhlutfall</span></div>
+            <div class="stat-box"><span class="stat-value">50%</span><span class="stat-label">Sigurhlutfall</span></div>
         </div>
-        <div class="win-bar win-bar-large"><div class="win-bar-fill" style="width: 0.0%"></div></div>
+        <div class="win-bar win-bar-large"><div class="win-bar-fill" style="width: 50.0%"></div></div>
     </div>
     <div class="lawyer-section">
         <h3>Hlutverk</h3>
         <div class="role-tags">
             <span class="role-tag role-defense_lawyer">
                 Verjandi
-                <span class="role-count">1</span>
+                <span class="role-count">2</span>
             </span>
         </div>
     </div>
@@ -47,6 +44,15 @@
         <div class="court-breakdown">
             <div class="court-stat-card haestirettur">
                 <div class="court-stat-name">Hæstiréttur</div>
+                <div class="court-stat-numbers">
+                    <span>1 mal</span>
+                    <span class="court-stat-wl">1S / 0T</span>
+                    <span>(100%)</span>
+                </div>
+                <div class="win-bar win-bar-small"><div class="win-bar-fill" style="width: 100.0%"></div></div>
+            </div>
+            <div class="court-stat-card heradsdomstolar">
+                <div class="court-stat-name">Héraðsdómstólar</div>
                 <div class="court-stat-numbers">
                     <span>1 mal</span>
                     <span class="court-stat-wl">0S / 1T</span>
@@ -58,22 +64,32 @@
     </div>
     <div class="lawyer-section">
         <div class="cases-header">
-            <h3>Mal (<span id="visible-count">1</span>)</h3>
+            <h3>Mal (<span id="visible-count">2</span>)</h3>
             <label class="checkbox-filter">
                 <input type="checkbox" id="hide-criminal-cases">
                 <span>Fela sakamál (S-)</span>
             </label>
         </div>
         <div class="cases-list" id="cases-list">
-            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="498/2009">
+            <div class="case-card heradsdomstolar" data-court="heradsdomstolar" data-case-number="S-25/2012">
                 <div class="case-header">
-                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <span class="court-tag heradsdomstolar">Héraðsdómstólar</span>
                     <div class="case-meta">
                         <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
                         <span class="outcome-badge outcome-loss">Tap</span>
                     </div>
                 </div>
-                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=27585b5e-b72a-4171-928d-ac82ff308edd" target="_blank" rel="noopener">498/2009</a></h3>
+                <h3><a href="https://www.heradsdomstolar.is/default.aspx?pageid=347c3bb1-8926-11e5-80c6-005056bc6a40&amp;id=29c26e22-0711-4e63-b3d8-790d533dd074" target="_blank" rel="noopener">S-25/2012</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="35/2002">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=5318ea23-78cf-44fe-975c-b5b0bf20ec5a" target="_blank" rel="noopener">35/2002</a></h3>
             </div>
         </div>
     </div>

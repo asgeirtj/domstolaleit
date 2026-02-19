@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olgeir Þór Marínósson - Logmannaleit</title>
+    <title>Bergsteinn Georgsson - Logmannaleit</title>
     <link rel="icon" type="image/jpeg" href="../../favicon.jpeg">
     <link rel="stylesheet" href="../../css/style.css">
 </head>
@@ -20,60 +20,86 @@
     <a href="../../index.html" class="back-link">Til baka</a>
     <div class="lawyer-header">
         <h2>
-            Olgeir Þór Marínósson
-            <span class="license-badge license-retired">
-                Hættur
-            </span>
+            Bergsteinn Georgsson
         </h2>
         <div class="lawyer-stats-row">
-            <div class="stat-box"><span class="stat-value">1</span><span class="stat-label">Mal</span></div>
-            <div class="stat-box stat-win"><span class="stat-value">1</span><span class="stat-label">Sigrar</span></div>
-            <div class="stat-box stat-loss"><span class="stat-value">0</span><span class="stat-label">Tap</span></div>
-            <div class="stat-box"><span class="stat-value">100%</span><span class="stat-label">Sigurhlutfall</span></div>
+            <div class="stat-box"><span class="stat-value">3</span><span class="stat-label">Mal</span></div>
+            <div class="stat-box stat-win"><span class="stat-value">0</span><span class="stat-label">Sigrar</span></div>
+            <div class="stat-box stat-loss"><span class="stat-value">3</span><span class="stat-label">Tap</span></div>
+            <div class="stat-box"><span class="stat-value">0%</span><span class="stat-label">Sigurhlutfall</span></div>
         </div>
-        <div class="win-bar win-bar-large"><div class="win-bar-fill" style="width: 100.0%"></div></div>
+        <div class="win-bar win-bar-large"><div class="win-bar-fill" style="width: 0.0%"></div></div>
     </div>
     <div class="lawyer-section">
         <h3>Hlutverk</h3>
         <div class="role-tags">
-            <span class="role-tag role-defendant_lawyer">
-                Lögmaður stefnda
-                <span class="role-count">1</span>
+            <span class="role-tag role-defense_lawyer">
+                Verjandi
+                <span class="role-count">3</span>
             </span>
         </div>
     </div>
     <div class="lawyer-section">
         <h3>Eftir dómstóli</h3>
         <div class="court-breakdown">
+            <div class="court-stat-card haestirettur">
+                <div class="court-stat-name">Hæstiréttur</div>
+                <div class="court-stat-numbers">
+                    <span>1 mal</span>
+                    <span class="court-stat-wl">0S / 1T</span>
+                    <span>(0%)</span>
+                </div>
+                <div class="win-bar win-bar-small"><div class="win-bar-fill" style="width: 0.0%"></div></div>
+            </div>
             <div class="court-stat-card heradsdomstolar">
                 <div class="court-stat-name">Héraðsdómstólar</div>
                 <div class="court-stat-numbers">
-                    <span>1 mal</span>
-                    <span class="court-stat-wl">1S / 0T</span>
-                    <span>(100%)</span>
+                    <span>2 mal</span>
+                    <span class="court-stat-wl">0S / 2T</span>
+                    <span>(0%)</span>
                 </div>
-                <div class="win-bar win-bar-small"><div class="win-bar-fill" style="width: 100.0%"></div></div>
+                <div class="win-bar win-bar-small"><div class="win-bar-fill" style="width: 0.0%"></div></div>
             </div>
         </div>
     </div>
     <div class="lawyer-section">
         <div class="cases-header">
-            <h3>Mal (<span id="visible-count">1</span>)</h3>
+            <h3>Mal (<span id="visible-count">3</span>)</h3>
             <label class="checkbox-filter">
                 <input type="checkbox" id="hide-criminal-cases">
                 <span>Fela sakamál (S-)</span>
             </label>
         </div>
         <div class="cases-list" id="cases-list">
-            <div class="case-card heradsdomstolar" data-court="heradsdomstolar" data-case-number="E-2728/2020">
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="297/2007">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=ec1963b7-5ccb-4bee-bd89-a819db7eec4f" target="_blank" rel="noopener">297/2007</a></h3>
+            </div>
+            <div class="case-card heradsdomstolar" data-court="heradsdomstolar" data-case-number="S-526/2006">
                 <div class="case-header">
                     <span class="court-tag heradsdomstolar">Héraðsdómstólar</span>
                     <div class="case-meta">
-                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
-                        <span class="outcome-badge outcome-win">Sigur</span>
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
                     </div>
                 </div>
-                <h3><a href="https://www.heradsdomstolar.is/default.aspx?pageid=347c3bb1-8926-11e5-80c6-005056bc6a40&amp;id=64393d52-68fb-48c0-b19d-41351a093dca" target="_blank" rel="noopener">E-2728/2020</a></h3>
+                <h3>S-526/2006</h3>
+            </div>
+            <div class="case-card heradsdomstolar" data-court="heradsdomstolar" data-case-number="S-308/2006">
+                <div class="case-header">
+                    <span class="court-tag heradsdomstolar">Héraðsdómstólar</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3>S-308/2006</h3>
             </div>
         </div>
     </div>

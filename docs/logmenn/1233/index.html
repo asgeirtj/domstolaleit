@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jón. H. B. Snorrason - Logmannaleit</title>
+    <title>Fanney Hrund Hilmarsdóttir - Logmannaleit</title>
     <link rel="icon" type="image/jpeg" href="../../favicon.jpeg">
     <link rel="stylesheet" href="../../css/style.css">
 </head>
@@ -20,25 +20,53 @@
     <a href="../../index.html" class="back-link">Til baka</a>
     <div class="lawyer-header">
         <h2>
-            Jón. H. B. Snorrason
-            <span class="license-badge license-retired">
-                Hættur
+            Fanney Hrund Hilmarsdóttir
+            <span class="license-badge license-inactive">
+                Innlagt leyfi
             </span>
         </h2>
-        <div class="lawyer-stats-row">
-            <div class="stat-box"><span class="stat-value">1</span><span class="stat-label">Mal</span></div>
-            <div class="stat-box stat-win"><span class="stat-value">1</span><span class="stat-label">Sigrar</span></div>
-            <div class="stat-box stat-loss"><span class="stat-value">0</span><span class="stat-label">Tap</span></div>
-            <div class="stat-box"><span class="stat-value">100%</span><span class="stat-label">Sigurhlutfall</span></div>
+        <div class="lawyer-meta">
+            <span class="meta-item">Hdl.</span>
+            <span class="meta-item">13.1 ára reynsla</span>
+            <span class="meta-item">38 ára</span>
         </div>
-        <div class="win-bar win-bar-large"><div class="win-bar-fill" style="width: 100.0%"></div></div>
+        <div class="lawyer-stats-row">
+            <div class="stat-box"><span class="stat-value">5</span><span class="stat-label">Mal</span></div>
+            <div class="stat-box stat-win"><span class="stat-value">2</span><span class="stat-label">Sigrar</span></div>
+            <div class="stat-box stat-loss"><span class="stat-value">3</span><span class="stat-label">Tap</span></div>
+            <div class="stat-box"><span class="stat-value">40%</span><span class="stat-label">Sigurhlutfall</span></div>
+        </div>
+        <div class="win-bar win-bar-large"><div class="win-bar-fill" style="width: 40.0%"></div></div>
+    </div>
+    <div class="lawyer-section">
+        <h3>Ferill</h3>
+        <div class="event-timeline">
+            <div class="event-item">
+                <span class="event-date">2012-12-27</span>
+                <span class="event-type">Réttindi veitt</span>
+                <span class="event-license">Hdl.</span>
+            </div>
+            <div class="event-item">
+                <span class="event-date">2017-01-16</span>
+                <span class="event-type">Leyfi innlagt</span>
+                <span class="event-license">Hdl.</span>
+            </div>
+        </div>
     </div>
     <div class="lawyer-section">
         <h3>Hlutverk</h3>
         <div class="role-tags">
-            <span class="role-tag role-prosecutor">
-                Saksóknari
+            <span class="role-tag role-defendant_lawyer">
+                Lögmaður stefnda
                 <span class="role-count">1</span>
+            </span>
+            <span class="role-tag role-defense_lawyer">
+                Verjandi
+                <span class="role-count">1</span>
+            </span>
+            <span class="role-tag role-plaintiff_lawyer">
+                Lögmaður stefnanda
+                <span class="role-count">4</span>
             </span>
         </div>
     </div>
@@ -48,32 +76,91 @@
             <div class="court-stat-card haestirettur">
                 <div class="court-stat-name">Hæstiréttur</div>
                 <div class="court-stat-numbers">
-                    <span>1 mal</span>
-                    <span class="court-stat-wl">1S / 0T</span>
-                    <span>(100%)</span>
+                    <span>2 mal</span>
+                    <span class="court-stat-wl">0S / 2T</span>
+                    <span>(0%)</span>
                 </div>
-                <div class="win-bar win-bar-small"><div class="win-bar-fill" style="width: 100.0%"></div></div>
+                <div class="win-bar win-bar-small"><div class="win-bar-fill" style="width: 0.0%"></div></div>
+            </div>
+            <div class="court-stat-card heradsdomstolar">
+                <div class="court-stat-name">Héraðsdómstólar</div>
+                <div class="court-stat-numbers">
+                    <span>3 mal</span>
+                    <span class="court-stat-wl">2S / 1T</span>
+                    <span>(67%)</span>
+                </div>
+                <div class="win-bar win-bar-small"><div class="win-bar-fill" style="width: 66.7%"></div></div>
             </div>
         </div>
     </div>
     <div class="lawyer-section">
         <div class="cases-header">
-            <h3>Mal (<span id="visible-count">1</span>)</h3>
+            <h3>Mal (<span id="visible-count">6</span>)</h3>
             <label class="checkbox-filter">
                 <input type="checkbox" id="hide-criminal-cases">
                 <span>Fela sakamál (S-)</span>
             </label>
         </div>
         <div class="cases-list" id="cases-list">
-            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="123/2013">
+            <div class="case-card heradsdomstolar" data-court="heradsdomstolar" data-case-number="E-37/2015">
                 <div class="case-header">
-                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <span class="court-tag heradsdomstolar">Héraðsdómstólar</span>
                     <div class="case-meta">
-                        <span class="role-tag role-prosecutor role-tag-small">Saksóknari</span>
+                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
                         <span class="outcome-badge outcome-win">Sigur</span>
                     </div>
                 </div>
-                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=743bac34-8483-4b75-b04a-33bd2ae2db07" target="_blank" rel="noopener">123/2013</a></h3>
+                <h3><a href="https://www.heradsdomstolar.is/default.aspx?pageid=347c3bb1-8926-11e5-80c6-005056bc6a40&amp;id=9874c46e-0c30-4d4c-aed0-68824613243d" target="_blank" rel="noopener">E-37/2015</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="157/2014">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=5e2051f0-7f77-4d9b-9415-e48adfce76f4" target="_blank" rel="noopener">157/2014</a></h3>
+            </div>
+            <div class="case-card heradsdomstolar" data-court="heradsdomstolar" data-case-number="E-48/2013">
+                <div class="case-header">
+                    <span class="court-tag heradsdomstolar">Héraðsdómstólar</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.heradsdomstolar.is/default.aspx?pageid=347c3bb1-8926-11e5-80c6-005056bc6a40&amp;id=330c2f19-cd76-4b49-aeba-f5f4fd1c6afc" target="_blank" rel="noopener">E-48/2013</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="48/2013">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=d66d3fd2-4e52-4b26-a8e9-b73f74c3e1d1" target="_blank" rel="noopener">48/2013</a></h3>
+            </div>
+            <div class="case-card heradsdomstolar" data-court="heradsdomstolar" data-case-number="X-563/2012">
+                <div class="case-header">
+                    <span class="court-tag heradsdomstolar">Héraðsdómstólar</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.heradsdomstolar.is/default.aspx?pageid=347c3bb1-8926-11e5-80c6-005056bc6a40&amp;id=54c8ea4c-6142-4fe1-9cdc-c62f9ea4f86e" target="_blank" rel="noopener">X-563/2012</a></h3>
+            </div>
+            <div class="case-card heradsdomstolar" data-court="heradsdomstolar" data-case-number="X-69/2012">
+                <div class="case-header">
+                    <span class="court-tag heradsdomstolar">Héraðsdómstólar</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-unknown">Óvíst</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.heradsdomstolar.is/default.aspx?pageid=347c3bb1-8926-11e5-80c6-005056bc6a40&amp;id=bdb7b93d-4c36-46e1-b012-09188ce6ad05" target="_blank" rel="noopener">X-69/2012</a></h3>
             </div>
         </div>
     </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sigurður Gústafsson Havstað - Logmannaleit</title>
+    <title>Magnús Thoroddsen - Logmannaleit</title>
     <link rel="icon" type="image/jpeg" href="../../favicon.jpeg">
     <link rel="stylesheet" href="../../css/style.css">
 </head>
@@ -20,36 +20,67 @@
     <a href="../../index.html" class="back-link">Til baka</a>
     <div class="lawyer-header">
         <h2>
-            Sigurður Gústafsson Havstað
-            <span class="license-badge license-retired">
-                Hættur
+            Magnús Thoroddsen
+            <span class="license-badge license-inactive">
+                Innlagt leyfi
             </span>
         </h2>
-        <div class="lawyer-stats-row">
-            <div class="stat-box"><span class="stat-value">1</span><span class="stat-label">Mal</span></div>
-            <div class="stat-box stat-win"><span class="stat-value">0</span><span class="stat-label">Sigrar</span></div>
-            <div class="stat-box stat-loss"><span class="stat-value">1</span><span class="stat-label">Tap</span></div>
-            <div class="stat-box"><span class="stat-value">0%</span><span class="stat-label">Sigurhlutfall</span></div>
+        <div class="lawyer-meta">
+            <span class="meta-item">25.1 ára reynsla</span>
+            <span class="meta-item">91 ára</span>
         </div>
-        <div class="win-bar win-bar-large"><div class="win-bar-fill" style="width: 0.0%"></div></div>
+        <div class="lawyer-stats-row">
+            <div class="stat-box"><span class="stat-value">33</span><span class="stat-label">Mal</span></div>
+            <div class="stat-box stat-win"><span class="stat-value">12</span><span class="stat-label">Sigrar</span></div>
+            <div class="stat-box stat-loss"><span class="stat-value">21</span><span class="stat-label">Tap</span></div>
+            <div class="stat-box"><span class="stat-value">36%</span><span class="stat-label">Sigurhlutfall</span></div>
+        </div>
+        <div class="win-bar win-bar-large"><div class="win-bar-fill" style="width: 36.4%"></div></div>
+    </div>
+    <div class="lawyer-section">
+        <h3>Ferill</h3>
+        <div class="event-timeline">
+            <div class="event-item">
+                <span class="event-date">2009-12-04</span>
+                <span class="event-type">Leyfi innlagt</span>
+                <span class="event-license">Hdl.</span>
+            </div>
+        </div>
     </div>
     <div class="lawyer-section">
         <h3>Hlutverk</h3>
         <div class="role-tags">
+            <span class="role-tag role-defendant_lawyer">
+                Lögmaður stefnda
+                <span class="role-count">12</span>
+            </span>
+            <span class="role-tag role-defense_lawyer">
+                Verjandi
+                <span class="role-count">9</span>
+            </span>
             <span class="role-tag role-plaintiff_lawyer">
                 Lögmaður stefnanda
-                <span class="role-count">1</span>
+                <span class="role-count">12</span>
             </span>
         </div>
     </div>
     <div class="lawyer-section">
         <h3>Eftir dómstóli</h3>
         <div class="court-breakdown">
+            <div class="court-stat-card haestirettur">
+                <div class="court-stat-name">Hæstiréttur</div>
+                <div class="court-stat-numbers">
+                    <span>31 mal</span>
+                    <span class="court-stat-wl">12S / 19T</span>
+                    <span>(39%)</span>
+                </div>
+                <div class="win-bar win-bar-small"><div class="win-bar-fill" style="width: 38.7%"></div></div>
+            </div>
             <div class="court-stat-card heradsdomstolar">
                 <div class="court-stat-name">Héraðsdómstólar</div>
                 <div class="court-stat-numbers">
-                    <span>1 mal</span>
-                    <span class="court-stat-wl">0S / 1T</span>
+                    <span>2 mal</span>
+                    <span class="court-stat-wl">0S / 2T</span>
                     <span>(0%)</span>
                 </div>
                 <div class="win-bar win-bar-small"><div class="win-bar-fill" style="width: 0.0%"></div></div>
@@ -58,14 +89,24 @@
     </div>
     <div class="lawyer-section">
         <div class="cases-header">
-            <h3>Mal (<span id="visible-count">1</span>)</h3>
+            <h3>Mal (<span id="visible-count">33</span>)</h3>
             <label class="checkbox-filter">
                 <input type="checkbox" id="hide-criminal-cases">
                 <span>Fela sakamál (S-)</span>
             </label>
         </div>
         <div class="cases-list" id="cases-list">
-            <div class="case-card heradsdomstolar" data-court="heradsdomstolar" data-case-number="E-1173/2024">
+            <div class="case-card heradsdomstolar" data-court="heradsdomstolar" data-case-number="E-261/2008">
+                <div class="case-header">
+                    <span class="court-tag heradsdomstolar">Héraðsdómstólar</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3>E-261/2008</h3>
+            </div>
+            <div class="case-card heradsdomstolar" data-court="heradsdomstolar" data-case-number="E-7835/2007">
                 <div class="case-header">
                     <span class="court-tag heradsdomstolar">Héraðsdómstólar</span>
                     <div class="case-meta">
@@ -73,7 +114,317 @@
                         <span class="outcome-badge outcome-loss">Tap</span>
                     </div>
                 </div>
-                <h3><a href="https://www.heradsdomstolar.is/default.aspx?pageid=347c3bb1-8926-11e5-80c6-005056bc6a40&amp;id=5e690f83-d30d-45da-889b-0a6cb19212e8" target="_blank" rel="noopener">E-1173/2024</a></h3>
+                <h3>E-7835/2007</h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="580/2006">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=23221777-6a3e-468e-9eb1-4e1fe44abab3" target="_blank" rel="noopener">580/2006</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="434/2005">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=a6baa427-2f48-44a8-a512-f2ee545c2576" target="_blank" rel="noopener">434/2005</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="181/2005">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=48cdd696-29d7-41fa-a168-ada762999dd4" target="_blank" rel="noopener">181/2005</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="173/2004">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=7ed3df22-6bff-4c3c-9f66-b52b6bc3d8cf" target="_blank" rel="noopener">173/2004</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="344/2003">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=f58f0739-a3e0-4dcd-b779-092c855c388b" target="_blank" rel="noopener">344/2003</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="297/2003">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=5e56798f-c694-46a1-a8f6-5618d52c3844" target="_blank" rel="noopener">297/2003</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="95/2003">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=3cbfa287-595d-4c29-a5b6-2cd3e2e8c883" target="_blank" rel="noopener">95/2003</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="48/2003">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=d8f2c776-2cb3-4588-aa6d-58b8e019ed26" target="_blank" rel="noopener">48/2003</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="12/2003">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=91952376-61da-41aa-b8b8-8789edc7228f" target="_blank" rel="noopener">12/2003</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="512/2002">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=9bd3cff2-83ca-40d7-abdf-9fb77b554bb7" target="_blank" rel="noopener">512/2002</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="473/2002">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=1c37bc55-abfa-4e58-90f6-bdcb1c8c1742" target="_blank" rel="noopener">473/2002</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="449/2002">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=ce410a72-3132-40a9-a8ec-ab8448075935" target="_blank" rel="noopener">449/2002</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="419/2002">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=a65274e9-88a7-49b0-bd3b-872931e772ca" target="_blank" rel="noopener">419/2002</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="274/2002">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=c5cb22b9-c71f-42f2-862c-8a6989627acf" target="_blank" rel="noopener">274/2002</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="14/2002">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=13e2f267-641a-4165-a6a8-5b0efb08d063" target="_blank" rel="noopener">14/2002</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="308/2001">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=2d511453-51d0-4ca2-a3d5-cf7275a45bd5" target="_blank" rel="noopener">308/2001</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="65/2001">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=bf39ceaa-a78a-476f-a160-4a32e0d51e6b" target="_blank" rel="noopener">65/2001</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="48/2001">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=5628f510-78ee-417b-81e4-491abcbd0124" target="_blank" rel="noopener">48/2001</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="47/2001">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=58b49e3b-2bdd-47d2-aa26-b9b0c832e1cf" target="_blank" rel="noopener">47/2001</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="42/2001">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=b88e6194-3ec4-4175-9dff-a266bfa73540" target="_blank" rel="noopener">42/2001</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="442/2000">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=861a14f5-8bf4-483a-a892-c65566c48221" target="_blank" rel="noopener">442/2000</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="329/2000">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=e498287c-0774-4134-84ee-8b2d8a8b46dc" target="_blank" rel="noopener">329/2000</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="95/2000">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=867598cb-ce10-48ac-8d13-0e2237034125" target="_blank" rel="noopener">95/2000</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="85/2000">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=02bd342c-4d92-457c-9c81-0ab567ad7f2c" target="_blank" rel="noopener">85/2000</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="54/2000">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=3db7404f-bb0c-4203-a813-9440d48f98a9" target="_blank" rel="noopener">54/2000</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="12/2000">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defense_lawyer role-tag-small">Verjandi</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=ec41e28f-73cc-422e-b1bd-2f903568667c" target="_blank" rel="noopener">12/2000</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="491/1999">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=c82446a0-09ba-47b0-94dd-830639d8df77" target="_blank" rel="noopener">491/1999</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="416/1999">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=13a4eb5a-2121-47e6-b0db-8f1362406c15" target="_blank" rel="noopener">416/1999</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="328/1999">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=1e9575aa-23b9-43c3-a73d-620c4e836539" target="_blank" rel="noopener">328/1999</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="251/1999">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-defendant_lawyer role-tag-small">Lögmaður stefnda</span>
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=35737611-0ad8-4d21-a4a1-793a9bd88fcb" target="_blank" rel="noopener">251/1999</a></h3>
+            </div>
+            <div class="case-card haestirettur" data-court="haestirettur" data-case-number="263/1998">
+                <div class="case-header">
+                    <span class="court-tag haestirettur">Hæstiréttur</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-plaintiff_lawyer role-tag-small">Lögmaður stefnanda</span>
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                    </div>
+                </div>
+                <h3><a href="https://www.haestirettur.is/default.aspx?pageid=0f2f6428-7b6a-11eb-947c-005056bc0bdb&amp;id=7f684acf-928e-4d28-86d6-b804b8ee965e" target="_blank" rel="noopener">263/1998</a></h3>
             </div>
         </div>
     </div>

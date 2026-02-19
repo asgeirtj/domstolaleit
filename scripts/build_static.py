@@ -114,7 +114,8 @@ def export_leaderboard_data(conn: sqlite3.Connection) -> list[dict]:
                SUM(CASE WHEN cl.outcome = 'win' THEN 1 ELSE 0 END) as w,
                SUM(CASE WHEN cl.outcome = 'loss' THEN 1 ELSE 0 END) as l
         FROM case_lawyers cl
-        WHERE cl.role = 'prosecutor'
+        JOIN verdicts v ON v.id = cl.verdict_id
+        WHERE cl.role = 'prosecutor' AND v.superseded_by IS NULL
         GROUP BY cl.lawyer_id
     """).fetchall()
     for pr in pros_rows:
@@ -130,6 +131,7 @@ def export_leaderboard_data(conn: sqlite3.Connection) -> list[dict]:
         FROM case_lawyers cl
         JOIN verdicts v ON v.id = cl.verdict_id
         WHERE v.court = 'heradsdomstolar' AND v.case_number LIKE 'S-%'
+              AND v.superseded_by IS NULL
         GROUP BY cl.lawyer_id
     """).fetchall()
     for cr in crim_rows:
@@ -208,7 +210,7 @@ def export_lawyer_profile(conn: sqlite3.Connection, lawyer_id: int) -> dict | No
                SUM(CASE WHEN cl.outcome = 'loss' THEN 1 ELSE 0 END) as l
         FROM case_lawyers cl
         JOIN verdicts v ON v.id = cl.verdict_id
-        WHERE cl.lawyer_id = ?
+        WHERE cl.lawyer_id = ? AND v.superseded_by IS NULL
         GROUP BY v.court
     """, (lawyer_id,)).fetchall()
 
@@ -225,18 +227,21 @@ def export_lawyer_profile(conn: sqlite3.Connection, lawyer_id: int) -> dict | No
     profile["by_court"] = by_court
 
     # Role breakdown
-    role_rows = conn.execute(
-        "SELECT role, COUNT(*) as cnt FROM case_lawyers WHERE lawyer_id = ? GROUP BY role",
-        (lawyer_id,),
-    ).fetchall()
+    role_rows = conn.execute("""
+        SELECT cl.role, COUNT(*) as cnt
+        FROM case_lawyers cl
+        JOIN verdicts v ON v.id = cl.verdict_id
+        WHERE cl.lawyer_id = ? AND v.superseded_by IS NULL
+        GROUP BY cl.role
+    """, (lawyer_id,)).fetchall()
     profile["roles"] = {rr["role"]: rr["cnt"] for rr in role_rows}
 
-    # Cases
+    # Cases (exclude superseded verdicts)
     case_rows = conn.execute("""
         SELECT cl.verdict_id, v.court, v.case_number, cl.role, cl.outcome, v.verdict_url
         FROM case_lawyers cl
         JOIN verdicts v ON v.id = cl.verdict_id
-        WHERE cl.lawyer_id = ?
+        WHERE cl.lawyer_id = ? AND v.superseded_by IS NULL
     """, (lawyer_id,)).fetchall()
 
     def _case_sort_key(r):
