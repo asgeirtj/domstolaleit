@@ -363,7 +363,7 @@ def render_leaderboard(lawyers_json: str) -> str:
             <tr>
                 <th class="col-rank">#</th>
                 <th class="col-name sortable" data-sort="name">Nafn</th>
-                <th class="col-cases sortable sorted" data-sort="case_count">Mal<span class="sort-arrow" id="arrow-case_count">&#9660;</span></th>
+                <th class="col-cases sortable sorted" data-sort="case_count">Mál<span class="sort-arrow" id="arrow-case_count">&#9660;</span></th>
                 <th class="col-wins sortable" data-sort="wins">S</th>
                 <th class="col-losses sortable" data-sort="losses">T</th>
                 <th class="col-winrate sortable" data-sort="win_rate" colspan="2">Sigur%</th>
@@ -616,7 +616,7 @@ def render_profile(profile: dict) -> str:
     # Stats row
     wr = lawyer["win_rate"]
     parts.append('        <div class="lawyer-stats-row">')
-    parts.append(f'            <div class="stat-box"><span class="stat-value">{lawyer["case_count"]}</span><span class="stat-label">Mal</span></div>')
+    parts.append(f'            <div class="stat-box"><span class="stat-value">{lawyer["case_count"]}</span><span class="stat-label">Mál</span></div>')
     parts.append(f'            <div class="stat-box stat-win"><span class="stat-value">{lawyer["wins"]}</span><span class="stat-label">Sigrar</span></div>')
     parts.append(f'            <div class="stat-box stat-loss"><span class="stat-value">{lawyer["losses"]}</span><span class="stat-label">Tap</span></div>')
     parts.append(f'            <div class="stat-box"><span class="stat-value">{wr:.0f}%</span><span class="stat-label">Sigurhlutfall</span></div>')
@@ -687,7 +687,7 @@ def render_profile(profile: dict) -> str:
             parts.append(f'            <div class="court-stat-card {_h(court)}">')
             parts.append(f'                <div class="court-stat-name">{_h(stats["display"])}</div>')
             parts.append(f'                <div class="court-stat-numbers">')
-            parts.append(f'                    <span>{stats["count"]} mal</span>')
+            parts.append(f'                    <span>{stats["count"]} mál</span>')
             parts.append(f'                    <span class="court-stat-wl">{stats["wins"]}S / {stats["losses"]}T</span>')
             parts.append(f'                    <span>({cwr:.0f}%)</span>')
             parts.append(f'                </div>')
@@ -700,7 +700,7 @@ def render_profile(profile: dict) -> str:
     cases = lawyer.get("cases", [])
     parts.append('    <div class="lawyer-section">')
     parts.append('        <div class="cases-header">')
-    parts.append(f'            <h3>Mal (<span id="visible-count">{len(cases)}</span>)</h3>')
+    parts.append(f'            <h3>Mál (<span id="visible-count">{len(cases)}</span>)</h3>')
     parts.append('            <label class="checkbox-filter">')
     parts.append('                <input type="checkbox" id="hide-criminal-cases">')
     parts.append('                <span>Fela sakamál (S-)</span>')
@@ -809,7 +809,7 @@ def build():
 
         profile_content = render_profile(profile)
         profile_html = render_base(
-            f'{profile["name"]} - Logmannaleit',
+            f'{profile["name"]} - Lögmannaleit',
             profile_content,
             css_path="../../css/style.css",
             favicon_path="../../favicon.jpeg",
