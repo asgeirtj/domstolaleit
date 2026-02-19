@@ -96,7 +96,8 @@ def export_leaderboard_data(conn: sqlite3.Connection) -> list[dict]:
         SELECT id, name, case_count, wins, losses,
                license_type, license_status,
                COALESCE(experience_from, license_date) as experience_from,
-               birth_date, lmfi_url, practice_category
+               birth_date, lmfi_url, practice_category,
+               COALESCE(is_corporate, 0) as is_corporate
         FROM lawyers
         WHERE case_count >= 1
         ORDER BY case_count DESC
@@ -167,6 +168,7 @@ def export_leaderboard_data(conn: sqlite3.Connection) -> list[dict]:
             "crim_cases": cs["cases"],
             "crim_wins": cs["wins"],
             "crim_losses": cs["losses"],
+            "is_corporate": bool(r["is_corporate"]),
         })
 
     return lawyers
@@ -348,6 +350,10 @@ def render_leaderboard(lawyers_json: str) -> str:
             <input type="checkbox" id="include-retired" checked>
             <span>Óvirka lögmenn</span>
         </label>
+        <label class="checkbox-filter">
+            <input type="checkbox" id="include-corporate" checked>
+            <span>Innanhúslögmenn</span>
+        </label>
     </div>
 </div>
 
@@ -381,7 +387,8 @@ var state = {{
     query: '',
     includeProsecutors: true,
     includeCriminal: true,
-    includeRetired: true
+    includeRetired: true,
+    includeCorporate: true
 }};
 
 function getEffective(lawyer) {{
@@ -412,6 +419,7 @@ function renderTable() {{
     for (var i = 0; i < LAWYERS.length; i++) {{
         var lawyer = LAWYERS[i];
         if (!state.includeRetired && lawyer.license_status !== 'active') continue;
+        if (!state.includeCorporate && lawyer.is_corporate) continue;
         if (q && lawyer.name.toLowerCase().indexOf(q) === -1) continue;
 
         var eff = getEffective(lawyer);
@@ -528,6 +536,10 @@ document.getElementById('include-criminal').addEventListener('change', function(
 }});
 document.getElementById('include-retired').addEventListener('change', function() {{
     state.includeRetired = this.checked;
+    renderTable();
+}});
+document.getElementById('include-corporate').addEventListener('change', function() {{
+    state.includeCorporate = this.checked;
     renderTable();
 }});
 
