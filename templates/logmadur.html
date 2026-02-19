@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lawyer.name }} - Dómstólaleit{% endblock %}
+
+{% block content %}
+<article class="lawyer-profile">
+    <a href="/logmenn" class="back-link" onclick="if(history.length>1){history.back();return false;}">Til baka</a>
+
+    <div class="lawyer-header">
+        <h2>
+            {{ lawyer.name }}
+            {% if lawyer.license_status %}
+            <span class="license-badge license-{{ lawyer.license_status }}">
+                {{ license_status_display.get(lawyer.license_status, '') }}
+            </span>
+            {% endif %}
+            {% if lawyer.lmfi_url %}
+            <a href="{{ lawyer.lmfi_url }}" target="_blank" rel="noopener" class="lmfi-link">lmfi</a>
+            {% endif %}
+        </h2>
+        {% if lawyer.license_type or lawyer.years_active is not none or lawyer.age is not none %}
+        <div class="lawyer-meta">
+            {% if lawyer.license_type %}
+            <span class="meta-item">{{ license_type_display.get(lawyer.license_type, lawyer.license_type) }}</span>
+            {% endif %}
+            {% if lawyer.years_active is not none %}
+            <span class="meta-item">{{ lawyer.years_active }} ára reynsla</span>
+            {% endif %}
+            {% if lawyer.age is not none %}
+            <span class="meta-item">{{ lawyer.age }} ára</span>
+            {% endif %}
+            {% if lawyer.practice_category %}
+            <span class="meta-item meta-practice">{{ lawyer.practice_category }}{% if lawyer.practice_subcategory and lawyer.practice_subcategory != lawyer.practice_category %} — {{ lawyer.practice_subcategory }}{% endif %}</span>
+            {% endif %}
+        </div>
+        {% endif %}
+        <div class="lawyer-stats-row">
+            <div class="stat-box">
+                <span class="stat-value">{{ lawyer.case_count }}</span>
+                <span class="stat-label">Mál</span>
+            </div>
+            <div class="stat-box stat-win">
+                <span class="stat-value">{{ lawyer.wins }}</span>
+                <span class="stat-label">Sigrar</span>
+            </div>
+            <div class="stat-box stat-loss">
+                <span class="stat-value">{{ lawyer.losses }}</span>
+                <span class="stat-label">Tap</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-value">{{ "%.0f"|format(lawyer.win_rate) }}%</span>
+                <span class="stat-label">Sigurhlutfall</span>
+            </div>
+        </div>
+        <div class="win-bar win-bar-large">
+            <div class="win-bar-fill" style="width: {{ lawyer.win_rate }}%"></div>
+        </div>
+    </div>
+
+    <div class="lawyer-details-grid">
+        {% if lawyer.roles %}
+        <div class="lawyer-detail-card">
+            <h4>Hlutverk</h4>
+            <div class="role-tags">
+                {% for role, count in lawyer.roles.items() %}
+                <span class="role-tag role-{{ role }}">
+                    {{ role_display.get(role, role) }}
+                    <span class="role-count">{{ count }}</span>
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if lawyer.by_court %}
+        <div class="lawyer-detail-card">
+            <h4>Dómstólar</h4>
+            <div class="court-breakdown">
+                {% for court, stats in lawyer.by_court.items() %}
+                <div class="court-stat-card {{ court }}">
+                    <div class="court-stat-name">{{ stats.display }}</div>
+                    <div class="court-stat-numbers">
+                        <span>{{ stats.count }} mál</span>
+                        <span class="court-stat-wl">{{ stats.wins }}S / {{ stats.losses }}T</span>
+                        <span>({{ "%.0f"|format(stats.win_rate) }}%)</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if lawyer.events or lawyer.license_date or lawyer.license_type %}
+        <div class="lawyer-detail-card">
+            <h4>Ferill</h4>
+            <div class="event-timeline">
+                {% for event in lawyer.events %}
+                <div class="event-item">
+                    <span class="event-date">{{ event.date[:10] if event.date else '?' }}</span>
+                    <span class="event-type">{{ event_type_display.get(event.event_type, event.event_type) }}</span>
+                    {% if event.license_type %}
+                    <span class="event-license">{{ license_type_display.get(event.license_type, event.license_type) }}</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% if not lawyer.events and lawyer.license_date %}
+                <div class="event-item">
+                    <span class="event-date">{{ lawyer.license_date[:10] }}</span>
+                    <span class="event-type">Réttindi veitt</span>
+                    {% if lawyer.license_type %}
+                    <span class="event-license">{{ license_type_display.get(lawyer.license_type, lawyer.license_type) }}</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% if lawyer.license_status == 'active' %}
+                <div class="event-item event-current">
+                    <span class="event-date">Nú</span>
+                    <span class="event-type">{{ license_status_display.get(lawyer.license_status, '') }}</span>
+                    {% if lawyer.license_type %}
+                    <span class="event-license">{{ license_type_display.get(lawyer.license_type, lawyer.license_type) }}</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="lawyer-section">
+        <div class="cases-header">
+            <h3>Mál (<span id="visible-count">{{ lawyer.cases|length }}</span>)</h3>
+            <label class="checkbox-filter">
+                <input type="checkbox" id="hide-criminal-cases">
+                <span>Fela sakamál (S-)</span>
+            </label>
+        </div>
+        <div class="cases-list" id="cases-list">
+            {% for case in lawyer.cases %}
+            <div class="case-card {{ case.court }}"
+                 data-court="{{ case.court }}"
+                 data-case-number="{{ case.case_number }}">
+                <div class="case-header">
+                    <span class="court-tag {{ case.court }}">{{ case.court_display }}</span>
+                    <div class="case-meta">
+                        <span class="role-tag role-{{ case.role }} role-tag-small">
+                            {{ role_display.get(case.role, case.role) }}
+                        </span>
+                        {% if case.outcome == "win" %}
+                        <span class="outcome-badge outcome-win">Sigur</span>
+                        {% elif case.outcome == "loss" %}
+                        <span class="outcome-badge outcome-loss">Tap</span>
+                        {% else %}
+                        <span class="outcome-badge outcome-unknown">Óvíst</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <h3>
+                    {% if case.verdict_url %}
+                    <a href="{{ case.verdict_url }}" target="_blank" rel="noopener">{{ case.case_number }}</a>
+                    {% else %}
+                    <a href="/domur/{{ case.verdict_id }}">{{ case.case_number }}</a>
+                    {% endif %}
+                </h3>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</article>
+
+<script>
+document.getElementById('hide-criminal-cases').addEventListener('change', function() {
+    var hide = this.checked;
+    var cards = document.querySelectorAll('#cases-list .case-card');
+    var visible = 0;
+    cards.forEach(function(card) {
+        var caseNum = card.dataset.caseNumber;
+        var court = card.dataset.court;
+        var isCriminal = court === 'heradsdomstolar' && caseNum.startsWith('S-');
+        if (hide && isCriminal) {
+            card.style.display = 'none';
+        } else {
+            card.style.display = '';
+            visible++;
+        }
+    });
+    document.getElementById('visible-count').textContent = visible;
+});
+</script>
+{% endblock %}

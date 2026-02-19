@@ -9,7 +9,35 @@ from urllib.parse import urljoin
 import httpx
 from bs4 import BeautifulSoup
 
-DATA_DIR = Path(__file__).parent.parent / "data" / "pdfs"
+DATA_DIR = Path(__file__).parent.parent / "data"
+PDF_DIR = DATA_DIR / "pdfs"
+TXT_DIR = DATA_DIR / "txt"
+
+
+def make_chronological_filename(case_number: str) -> str:
+    """Convert scraped case number to chronological filename (no extension).
+
+    Examples:
+        'E-102/2020' -> '2020-E-0102'
+        '1/2018'     -> '2018-0001'
+        '1. /1999'   -> '1999-0001'
+    """
+    cn = case_number.strip()
+    # PREFIX-NUM/YEAR (heradsdomstolar)
+    m = re.search(r"([A-Z])-(\d+)/(\d{4})", cn)
+    if m:
+        return f"{m.group(3)}-{m.group(1)}-{m.group(2).zfill(4)}"
+    # NUM/YEAR (landsrettur, haestirettur)
+    m = re.search(r"(\d+)/(\d{4})", cn)
+    if m:
+        return f"{m.group(2)}-{m.group(1).zfill(4)}"
+    # Fallback: any number followed by 4-digit year
+    m = re.search(r"(\d+)\D+(\d{4})", cn)
+    if m:
+        return f"{m.group(2)}-{m.group(1).zfill(4)}"
+    # Last resort
+    return re.sub(r"[^\w\-]", "_", cn)
+
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
@@ -29,11 +57,12 @@ COURTS = {
     "heradsdomstolar": {
         "base_url": "https://www.heradsdomstolar.is",
         "list_url": "/default.aspx",
-        "pageid": "7740b77b-6e71-11e5-80c3-005056bc50d4",
         "pageitemid": "e7fc58af-8d46-11e5-80c6-005056bc6a40",
-        "page_size": 100,
+        "page_size": 20,
         "link_selector": "a.sentence",
         "has_pdf": True,
+        "html_fallback": "#verdict-text",  # Older cases have no PDF, extract HTML instead
+        "use_offset": True,
     },
     "haestirettur": {
         "base_url": "https://www.haestirettur.is",
@@ -53,28 +82,12 @@ async def fetch_page(client: httpx.AsyncClient, court: dict, offset: int) -> lis
     base_url = court["base_url"]
     url = f"{base_url}{court['list_url']}"
 
-    if court.get("use_offset"):
-        # Hæstiréttur and Landsréttur use offset/count pagination
-        params = {
-            "pageitemid": court["pageitemid"],
-            "offset": offset,
-            "count": court["page_size"],
-        }
-    elif "landsrettur" in base_url:
-        # Landsréttur alternate pattern
-        url = f"{base_url}{court['list_url']}"
-        params = {
-            "pageitemid": court["pageitemid"],
-            "offset": offset,
-        }
-    else:
-        # Héraðsdómstólar uses pageid pattern
-        params = {
-            "pageid": court["pageid"],
-            "pageitemid": court["pageitemid"],
-            "count": offset + court["page_size"],
-            "more": court["page_size"],
-        }
+    # All courts use offset/count pagination
+    params = {
+        "pageitemid": court["pageitemid"],
+        "offset": offset,
+        "count": court["page_size"],
+    }
 
     response = await client.get(url, params=params)
     response.raise_for_status()
@@ -90,13 +103,10 @@ async def fetch_page(client: httpx.AsyncClient, court: dict, offset: int) -> lis
         case_number_elem = link.select_one("h2")
         case_number = case_number_elem.get_text(strip=True) if case_number_elem else "unknown"
 
-        # Clean case number for filename
-        safe_name = re.sub(r'[^\w\-]', '_', case_number)
-
         cases.append({
             "url": urljoin(base_url, href),
             "case_number": case_number,
-            "filename": f"{safe_name}.pdf",
+            "filename": f"{make_chronological_filename(case_number)}.pdf",
         })
 
     return cases
@@ -170,8 +180,11 @@ async def extract_html_content(client: httpx.AsyncClient, case_url: str, selecto
 async def download_court(client: httpx.AsyncClient, court_name: str):
     """Download all verdicts from a court."""
     court = COURTS[court_name]
-    output_dir = DATA_DIR / court_name
-    output_dir.mkdir(parents=True, exist_ok=True)
+    pdf_dir = PDF_DIR / court_name
+    txt_dir = TXT_DIR / court_name
+    txt_dir.mkdir(parents=True, exist_ok=True)
+    if court.get("has_pdf", True):
+        pdf_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"\n{'='*60}")
     print(f"  {court_name.upper()}")
@@ -179,6 +192,7 @@ async def download_court(client: httpx.AsyncClient, court_name: str):
 
     has_pdf = court.get("has_pdf", True)
     content_selector = court.get("content_selector")
+    html_fallback = court.get("html_fallback")
 
     if not has_pdf:
         print("(Saving as text - no PDFs available)")
@@ -202,7 +216,7 @@ async def download_court(client: httpx.AsyncClient, court_name: str):
         if not cases:
             consecutive_empty += 1
             print("0 cases")
-            if consecutive_empty >= 3:
+            if consecutive_empty >= 10:
                 print("No more cases found")
                 break
             offset += page_size
@@ -216,30 +230,36 @@ async def download_court(client: httpx.AsyncClient, court_name: str):
         failed = 0
 
         for case in cases:
-            # Use .txt extension for HTML-extracted content
-            if has_pdf:
-                output_path = output_dir / case["filename"]
-            else:
-                output_path = output_dir / case["filename"].replace(".pdf", ".txt")
+            pdf_path = pdf_dir / case["filename"]
+            txt_path = txt_dir / case["filename"].replace(".pdf", ".txt")
 
-            if output_path.exists():
-                skipped += 1
-                continue
+            if has_pdf:
+                # Skip if we have either the PDF or a .txt extraction
+                if pdf_path.exists() or txt_path.exists():
+                    skipped += 1
+                    continue
+            else:
+                if txt_path.exists():
+                    skipped += 1
+                    continue
 
             if has_pdf:
                 pdf_url = await find_pdf_link(client, case["url"])
-                if not pdf_url:
-                    failed += 1
-                    continue
-
-                if await download_pdf(client, pdf_url, output_path):
+                if pdf_url and await download_pdf(client, pdf_url, pdf_path):
                     downloaded += 1
                     print(f"  + {case['case_number']}")
+                elif html_fallback:
+                    # No PDF link — try extracting HTML content instead
+                    if await extract_html_content(client, case["url"], html_fallback, txt_path):
+                        downloaded += 1
+                        print(f"  + {case['case_number']} (html)")
+                    else:
+                        failed += 1
                 else:
                     failed += 1
             else:
                 # Extract HTML content for courts without PDFs
-                if await extract_html_content(client, case["url"], content_selector, output_path):
+                if await extract_html_content(client, case["url"], content_selector, txt_path):
                     downloaded += 1
                     print(f"  + {case['case_number']}")
                 else:
@@ -263,7 +283,8 @@ async def download_court(client: httpx.AsyncClient, court_name: str):
 async def main():
     import sys
 
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    PDF_DIR.mkdir(parents=True, exist_ok=True)
+    TXT_DIR.mkdir(parents=True, exist_ok=True)
 
     courts = sys.argv[1:] if len(sys.argv) > 1 else ["landsrettur", "heradsdomstolar", "haestirettur"]
 

@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from app.api.routes import router as search_router
+from app.api.lawyer_routes import router as lawyer_router
 from app.config import STATIC_DIR, TEMPLATES_DIR
 
 # Configure logging
@@ -51,6 +52,7 @@ app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
 app.include_router(search_router)
+app.include_router(lawyer_router)
 
 
 @app.get("/", response_class=HTMLResponse)

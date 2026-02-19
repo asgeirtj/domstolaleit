@@ -99,7 +99,21 @@ def extract_summary(text: str) -> str | None:
         summary = " ".join(summary.split())
         return summary if summary else None
 
-    # Hæstiréttur newer format: Starts with "Dómur Hæstaréttar"
+    # Hæstiréttur newer format (2024+): "Ágreiningsefni" section with numbered paragraphs
+    # Extract the first paragraph(s) after "Ágreiningsefni" header
+    match = re.search(
+        r"Ágreiningsefni\s*\n(.+?)(?:\n(?:Málsatvik|Málsástæður|Löggjöf|Niðurstaða)\s*\n)",
+        text[:8000],
+        re.DOTALL
+    )
+    if match:
+        summary = match.group(1).strip()
+        # Strip leading paragraph numbers (e.g., "6. ")
+        summary = re.sub(r"^\d+\.\s*", "", summary)
+        summary = " ".join(summary.split())
+        return summary if summary else None
+
+    # Hæstiréttur older format: Starts with "Dómur Hæstaréttar"
     # Find party reference which starts the case description
     match = re.search(
         r"Dómur Hæstaréttar\.?\s*\n.+?((?:Sóknaraðil|Varnaraðil|Áfrýjand|Aðaláfrýjand|Gagnáfrýjand|Ákæruvald|Ákærð).+?)(?:\nDómsorð|\n[IVX]+\s*\n)",
@@ -183,6 +197,55 @@ def generate_variants(word: str) -> set[str]:
     return variants
 
 
+def sanitize_query(query: str) -> str:
+    """Strip characters that break FTS5 syntax (quotes, special operators).
+
+    Handles ASCII quotes and Unicode smart/curly quotes (macOS auto-converts
+    straight quotes to smart quotes, and Icelandic uses „..." low-high quotes).
+    """
+    # Remove all ASCII and Unicode quotation marks
+    return re.sub(r'["\'\u201c\u201d\u201e\u201f\u2018\u2019\u201a\u201b\u00ab\u00bb]', '', query).strip()
+
+
+QUOTE_CHARS = set('"\'\u201c\u201d\u201e\u201f\u2018\u2019\u201a\u201b\u00ab\u00bb')
+
+
+def is_phrase_query(query: str) -> bool:
+    """Check if query is wrapped in quotation marks (phrase search intent)."""
+    q = query.strip()
+    if len(q) < 3:
+        return False
+    return q[0] in QUOTE_CHARS and q[-1] in QUOTE_CHARS
+
+
+def build_phrase_query(query: str) -> str:
+    """Build FTS5 phrase query with Icelandic character variants.
+
+    Takes a quoted query like "elisabet petursdottir" and produces
+    FTS5-compatible phrase expressions with all variant combinations.
+    e.g., '"skadabaetur vegna"' -> '"skadabaetur vegna" OR "skaðabætur vegna" OR ...'
+    """
+    from itertools import product
+
+    clean = sanitize_query(query).lower()
+    words = clean.split()
+    if not words:
+        return f'"{clean}"'
+
+    word_variants = [sorted(generate_variants(w)) for w in words]
+
+    # Cartesian product of all variant combinations
+    phrases = []
+    for combo in product(*word_variants):
+        phrases.append('"' + " ".join(combo) + '"')
+
+    # Safety cap to avoid query explosion with many variant-rich words
+    if len(phrases) > 64:
+        return '"' + " ".join(words) + '"'
+
+    return " OR ".join(phrases)
+
+
 def expand_icelandic_query(query: str) -> str:
     """Expand query to handle Icelandic character variants.
 
@@ -190,6 +253,7 @@ def expand_icelandic_query(query: str) -> str:
     e.g., "skilnadur" -> "(skilnadur OR skilnaður)"
     For multiple words: "(word1 OR variant1) AND (word2 OR variant2)"
     """
+    query = sanitize_query(query)
     words = query.split()
     if not words:
         return query
@@ -206,8 +270,9 @@ def expand_icelandic_query(query: str) -> str:
         else:
             expanded_words.append(word_lower)
 
-    # Join with explicit AND for FTS5 compatibility
-    return " AND ".join(expanded_words)
+    # Join with OR so documents matching ANY word appear (FTS5 rank
+    # still pushes documents matching more words to the top)
+    return " OR ".join(expanded_words)
 
 # Fallback search URLs (used when verdict_url is not available in database)
 COURT_SEARCH_URLS = {
@@ -357,8 +422,12 @@ def search(query: str, courts: list[str] | None = None, limit: int = 100) -> lis
     if not query.strip():
         return []
 
-    # Expand query to handle Icelandic character variants
-    expanded_query = expand_icelandic_query(query.strip())
+    # Detect phrase search (query wrapped in any type of quotation marks)
+    raw_query = query.strip()
+    if is_phrase_query(raw_query):
+        expanded_query = build_phrase_query(raw_query)
+    else:
+        expanded_query = expand_icelandic_query(raw_query)
 
     try:
         conn = sqlite3.connect(DB_PATH, timeout=5.0)
@@ -405,10 +474,8 @@ def search(query: str, courts: list[str] | None = None, limit: int = 100) -> lis
             # Extract up to 3 snippets with search terms highlighted
             snippets = extract_snippets(content, query)
 
-            # Use stored verdict_url if available, otherwise fall back to search URL
-            url = row["verdict_url"] if row["verdict_url"] else build_url(
-                row["court"], row["case_number"], row["filename"]
-            )
+            # Use stored verdict_url if available, otherwise fall back to local view
+            url = row["verdict_url"] if row["verdict_url"] else f"/domur/{row['id']}"
 
             results.append(SearchResult(
                 id=row["id"],
@@ -429,25 +496,29 @@ def search(query: str, courts: list[str] | None = None, limit: int = 100) -> lis
         return results
     except sqlite3.OperationalError as e:
         # Handle FTS syntax errors gracefully
-        if "fts5" in str(e).lower():
-            # Try escaping the query for literal search
-            escaped = f'"{query}"'
+        if "fts5" in str(e).lower() or "syntax" in str(e).lower() or "unterminated" in str(e).lower():
+            # Sanitize and retry as a simple quoted phrase
+            clean = sanitize_query(query)
+            if not clean:
+                return []
+            escaped = f'"{clean}"'
             params[0] = escaped
-            cursor = conn.execute(sql, params)
-            results = []
-            for row in cursor:
-                url = row["verdict_url"] if row["verdict_url"] else build_url(
-                    row["court"], row["case_number"], row["filename"]
-                )
-                results.append(SearchResult(
-                    id=row["id"],
-                    court=row["court"],
-                    court_display=get_court_display_name(row["court"]),
-                    case_number=format_case_number(row["case_number"]),
-                    snippet=row["snippet"] or "",
-                    url=url,
-                ))
-            return results
+            try:
+                cursor = conn.execute(sql, params)
+                results = []
+                for row in cursor:
+                    url = row["verdict_url"] if row["verdict_url"] else f"/domur/{row['id']}"
+                    results.append(SearchResult(
+                        id=row["id"],
+                        court=row["court"],
+                        court_display=get_court_display_name(row["court"]),
+                        case_number=format_case_number(row["case_number"]),
+                        snippet="",
+                        url=url,
+                    ))
+                return results
+            except sqlite3.OperationalError:
+                return []
         raise
     finally:
         conn.close()

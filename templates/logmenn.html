@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block title %}Lögmenn - Dómstólaleit{% endblock %}
+
+{% block content %}
+<div class="search-container compact-filters">
+    <div class="filters-top-row">
+        <div class="filters-left">
+            <span class="page-description"><span id="lawyer-count">{{ total }}</span> lögmenn með <span id="min-cases-display">{{ min_cases }}</span>+ mál</span>
+            <input type="text"
+                   id="lawyer-search"
+                   name="q"
+                   value="{{ q }}"
+                   placeholder="Leita að lögmanni..."
+                   hx-get="/logmenn/leit"
+                   hx-target="#lawyer-table-body"
+                   hx-trigger="keyup changed delay:300ms"
+                   hx-include="[name='sort'], [name='sort_dir'], [name='min_cases'], [name='include_prosecutors'], [name='include_criminal'], [name='include_retired'], [name='exclude_corporate']">
+        </div>
+        <div class="filter-buttons" id="min-cases-buttons">
+            {% for val in [1, 5, 10, 20, 30, 40, 50, 100] %}
+            <button type="button" class="filter-btn{% if min_cases == val %} active{% endif %}" data-value="{{ val }}">{{ val }}+</button>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="filters-bottom-row">
+        <span class="filter-label">Innihalda:</span>
+        <label class="checkbox-filter">
+            <input type="checkbox" id="include-prosecutors" name="include_prosecutors" value="true" {% if include_prosecutors %}checked{% endif %}>
+            <span>Saksóknara</span>
+        </label>
+        <label class="checkbox-filter">
+            <input type="checkbox" id="include-criminal" name="include_criminal" value="true" {% if include_criminal %}checked{% endif %}>
+            <span>Sakamál (S-)</span>
+        </label>
+        <label class="checkbox-filter">
+            <input type="checkbox" id="include-retired" name="include_retired" value="true" {% if include_retired %}checked{% endif %}>
+            <span>Óvirka lögmenn</span>
+        </label>
+        <span class="filter-separator">|</span>
+        <span class="filter-label">Sía út:</span>
+        <label class="checkbox-filter">
+            <input type="checkbox" id="exclude-corporate" name="exclude_corporate" value="true" {% if exclude_corporate %}checked{% endif %}>
+            <span>Innanhúslögmenn</span>
+        </label>
+    </div>
+    <input type="hidden" name="sort" id="sort-value" value="{{ sort }}">
+    <input type="hidden" name="sort_dir" id="sort-dir-value" value="{{ sort_dir }}">
+    <input type="hidden" name="min_cases" id="min-cases" value="{{ min_cases }}">
+</div>
+
+<div class="leaderboard-table-wrapper">
+    <table class="leaderboard-table">
+        <thead>
+            <tr>
+                <th class="col-rank">#</th>
+                <th class="col-name sortable{% if sort == 'name' %} sorted{% endif %}" data-sort="name">
+                    Nafn{% if sort == 'name' %}<span class="sort-arrow">{{ '▲' if sort_dir == 'asc' else '▼' }}</span>{% endif %}
+                </th>
+                <th class="col-cases sortable{% if sort == 'case_count' %} sorted{% endif %}" data-sort="case_count">
+                    Mál{% if sort == 'case_count' %}<span class="sort-arrow">{{ '▲' if sort_dir == 'asc' else '▼' }}</span>{% endif %}
+                </th>
+                <th class="col-wins sortable{% if sort == 'wins' %} sorted{% endif %}" data-sort="wins">
+                    S{% if sort == 'wins' %}<span class="sort-arrow">{{ '▲' if sort_dir == 'asc' else '▼' }}</span>{% endif %}
+                </th>
+                <th class="col-losses sortable{% if sort == 'losses' %} sorted{% endif %}" data-sort="losses">
+                    T{% if sort == 'losses' %}<span class="sort-arrow">{{ '▲' if sort_dir == 'asc' else '▼' }}</span>{% endif %}
+                </th>
+                <th class="col-winrate sortable{% if sort == 'win_rate' %} sorted{% endif %}" data-sort="win_rate" colspan="2">
+                    Sigur%{% if sort == 'win_rate' %}<span class="sort-arrow">{{ '▲' if sort_dir == 'asc' else '▼' }}</span>{% endif %}
+                </th>
+                <th class="col-info">Réttindi</th>
+                <th class="col-exp sortable{% if sort == 'years_active' %} sorted{% endif %}" data-sort="years_active">
+                    Reynsla{% if sort == 'years_active' %}<span class="sort-arrow">{{ '▲' if sort_dir == 'asc' else '▼' }}</span>{% endif %}
+                </th>
+                <th class="col-age sortable{% if sort == 'age' %} sorted{% endif %}" data-sort="age">
+                    Aldur{% if sort == 'age' %}<span class="sort-arrow">{{ '▲' if sort_dir == 'asc' else '▼' }}</span>{% endif %}
+                </th>
+            </tr>
+        </thead>
+        <tbody id="lawyer-table-body">
+            {% for lawyer in lawyers %}
+            <tr class="{% if lawyer.license_status in ['retired', 'inactive', 'revoked'] %}row-inactive{% endif %}">
+                <td class="col-rank">{{ loop.index }}</td>
+                <td class="col-name">
+                    <a href="/logmenn/{{ lawyer.id }}">{{ lawyer.name }}</a>
+                    {% if lawyer.lmfi_url %}<a href="{{ lawyer.lmfi_url }}" target="_blank" rel="noopener" class="lmfi-link" title="LMFI">L</a>{% endif %}
+                </td>
+                <td class="col-cases">{{ lawyer.case_count }}</td>
+                <td class="col-wins">{{ lawyer.wins }}</td>
+                <td class="col-losses">{{ lawyer.losses }}</td>
+                <td class="col-winrate-num">{{ "%.0f"|format(lawyer.win_rate) }}%</td>
+                <td class="col-winrate-bar">
+                    <div class="win-bar">
+                        <div class="win-bar-fill" style="width: {{ lawyer.win_rate }}%"></div>
+                    </div>
+                </td>
+                <td class="col-info">
+                    {% if lawyer.license_type and lawyer.license_status == 'active' %}
+                    <span class="license-badge license-active">
+                        {{ lawyer.license_type|upper }}
+                    </span>
+                    {% endif %}
+                </td>
+                <td class="col-exp">{% if lawyer.license_status == 'active' and lawyer.years_active is not none %}{{ "%.1f"|format(lawyer.years_active) }}{% if lawyer.years_active_approx %} +{% endif %}{% endif %}</td>
+                <td class="col-age">{% if lawyer.license_status == 'active' and lawyer.age is not none %}{{ lawyer.age|int }}{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+function getFilterValues() {
+    var vals = {
+        q: document.getElementById('lawyer-search').value,
+        sort: document.getElementById('sort-value').value,
+        sort_dir: document.getElementById('sort-dir-value').value,
+        min_cases: document.getElementById('min-cases').value
+    };
+    if (document.getElementById('include-prosecutors').checked) {
+        vals.include_prosecutors = 'true';
+    }
+    if (document.getElementById('include-criminal').checked) {
+        vals.include_criminal = 'true';
+    }
+    if (document.getElementById('include-retired').checked) {
+        vals.include_retired = 'true';
+    }
+    if (document.getElementById('exclude-corporate').checked) {
+        vals.exclude_corporate = 'true';
+    }
+    return vals;
+}
+
+function syncURL() {
+    var vals = getFilterValues();
+    var params = new URLSearchParams();
+    Object.keys(vals).forEach(function(k) {
+        if (vals[k]) params.set(k, vals[k]);
+    });
+    history.replaceState(null, '', '/logmenn?' + params.toString());
+}
+
+function doFilter() {
+    htmx.ajax('GET', '/logmenn/leit', {
+        target: '#lawyer-table-body',
+        values: getFilterValues()
+    });
+    syncURL();
+}
+
+document.querySelectorAll('#min-cases-buttons .filter-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        document.querySelector('#min-cases-buttons .filter-btn.active')?.classList.remove('active');
+        this.classList.add('active');
+        document.getElementById('min-cases').value = this.dataset.value;
+        doFilter();
+    });
+});
+
+document.getElementById('include-prosecutors').addEventListener('change', doFilter);
+document.getElementById('include-criminal').addEventListener('change', doFilter);
+document.getElementById('include-retired').addEventListener('change', doFilter);
+document.getElementById('exclude-corporate').addEventListener('change', doFilter);
+
+// On page load (or bfcache restore), sync UI from URL params.
+// Returns true if any value changed from the server-rendered defaults.
+function restoreFromURL() {
+    var params = new URLSearchParams(window.location.search);
+    var changed = false;
+    var mc = params.get('min_cases');
+    if (mc && mc !== document.getElementById('min-cases').value) {
+        document.getElementById('min-cases').value = mc;
+        document.getElementById('min-cases-display').textContent = mc;
+        document.querySelectorAll('#min-cases-buttons .filter-btn').forEach(function(b) {
+            b.classList.toggle('active', b.dataset.value === mc);
+        });
+        changed = true;
+    }
+    var checkboxes = [
+        ['include_prosecutors', 'include-prosecutors'],
+        ['include_criminal', 'include-criminal'],
+        ['include_retired', 'include-retired'],
+        ['exclude_corporate', 'exclude-corporate']
+    ];
+    checkboxes.forEach(function(pair) {
+        var val = params.get(pair[0]);
+        var el = document.getElementById(pair[1]);
+        if (val !== null && el.checked !== (val === 'true')) {
+            el.checked = (val === 'true');
+            changed = true;
+        }
+    });
+    var sort = params.get('sort');
+    var sortDir = params.get('sort_dir');
+    if (sort && sort !== document.getElementById('sort-value').value) {
+        document.getElementById('sort-value').value = sort;
+        changed = true;
+    }
+    if (sortDir && sortDir !== document.getElementById('sort-dir-value').value) {
+        document.getElementById('sort-dir-value').value = sortDir;
+        changed = true;
+    }
+    var q = params.get('q');
+    if (q !== null && q !== document.getElementById('lawyer-search').value) {
+        document.getElementById('lawyer-search').value = q;
+        changed = true;
+    }
+    return changed;
+}
+if (restoreFromURL()) doFilter();
+window.addEventListener('pageshow', function(e) {
+    if (e.persisted && restoreFromURL()) doFilter();
+});
+
+document.querySelectorAll('th.sortable').forEach(function(th) {
+    th.addEventListener('click', function() {
+        var sortField = this.dataset.sort;
+        var sortInput = document.getElementById('sort-value');
+        var sortDirInput = document.getElementById('sort-dir-value');
+
+        if (sortInput.value === sortField) {
+            sortDirInput.value = sortDirInput.value === 'desc' ? 'asc' : 'desc';
+        } else {
+            sortInput.value = sortField;
+            sortDirInput.value = sortField === 'name' ? 'asc' : 'desc';
+        }
+        doFilter();
+    });
+});
+
+document.body.addEventListener('htmx:afterSwap', function(evt) {
+    if (evt.detail.target.id !== 'lawyer-table-body') return;
+    var oob = evt.detail.target.querySelector('.oob-data');
+    if (oob) {
+        document.getElementById('lawyer-count').textContent = oob.dataset.total;
+        document.getElementById('min-cases-display').textContent = oob.dataset.minCases;
+        oob.remove();
+    }
+    syncURL();
+});
+</script>
+{% endblock %}

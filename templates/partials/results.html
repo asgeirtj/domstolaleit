@@ -1,6 +1,6 @@
 <div class="results-container">
     <div class="results-summary">
-        <h2>Niðurstöður fyrir "{{ query }}"</h2>
+        <h2>Niðurstöður fyrir <em>{{ query }}</em></h2>
         <p class="result-count">{{ all_cases|length }} dómar fundust</p>
     </div>
 
@@ -59,7 +59,7 @@
     </div>
     {% else %}
     <div class="no-results">
-        <p>Engir dómar fundust með leitarorðunum "{{ query }}".</p>
+        <p>Engir dómar fundust með leitarorðunum <em>{{ query }}</em>.</p>
         <p>Prófa að breyta leitarorðum eða nota styttri leit.</p>
     </div>
     {% endif %}
